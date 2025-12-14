@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Record - Crypto Trading</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1f3a93 0%, #2d5a8c 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #1f3a93;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #1f3a93;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #1f3a93 0%, #2d5a8c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-box h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-box .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .stat-box .positive {
+            color: #4ade80;
+        }
+
+        .stat-box .negative {
+            color: #f87171;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-container h2 {
+            color: #1f3a93;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        .table-container {
+            margin-top: 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #1f3a93;
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: none;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tbody tr:hover {
+            background-color: #f3f4f6;
+        }
+
+        .positive-pnl {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .negative-pnl {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Track Record - Crypto Trading</h1>
+            <p>Análisis detallado de operaciones | 22-29 Agosto 2025</p>
+        </header>
+
+        <div class="stats-summary">
+            <div class="stat-box">
+                <h3>Depósito Inicial</h3>
+                <div class="value">1,088.36 €</div>
+            </div>
+            <div class="stat-box">
+                <h3>Balance Final</h3>
+                <div class="value">1,320.66 €</div>
+            </div>
+            <div class="stat-box">
+                <h3>PnL Total</h3>
+                <div class="value positive">+232.30 € (+21.34%)</div>
+            </div>
+            <div class="stat-box">
+                <h3>Win Rate</h3>
+                <div class="value">46.4% (13/28)</div>
+            </div>
+            <div class="stat-box">
+                <h3>Máximo Drawdown</h3>
+                <div class="value negative">-87.93 € (-6.30%)</div>
+            </div>
+            <div class="stat-box">
+                <h3>Profit Factor</h3>
+                <div class="value">3.00x</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h2>📈 Evolución del Balance (EUR)</h2>
+                <div class="chart-wrapper">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>📊 PnL por Operación (EUR)</h2>
+                <div class="chart-wrapper">
+                    <canvas id="pnlChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>📉 Drawdown (EUR)</h2>
+                <div class="chart-wrapper">
+                    <canvas id="drawdownChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2 style="color: #1f3a93; margin-bottom: 20px;">📋 Detalle de Operaciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Par/Símbolo</th>
+                        <th>PnL (EUR)</th>
+                        <th>Balance (EUR)</th>
+                        <th>PnL Acumulado (EUR)</th>
+                        <th>Drawdown (EUR)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>📍 Track Record generado automáticamente | Datos del período 22-29 de Agosto 2025</p>
+            <p>Pasa el cursor sobre las gráficas para ver los valores detallados de cada operación</p>
+        </footer>
+    </div>
+
+    <script>
+        const data = [
+            {fecha: "2025-08-22", hora: "18:25", symbol: "ETH/USDT", pnl: 28.51, balance: 1116.87, acumulado: 28.51, drawdown: 0.0},
+            {fecha: "2025-08-22", hora: "19:28", symbol: "ETH/USDT", pnl: 56.53, balance: 1173.40, acumulado: 85.04, drawdown: 0.0},
+            {fecha: "2025-08-22", hora: "23:03", symbol: "AAVE/USDT", pnl: 35.74, balance: 1209.14, acumulado: 120.78, drawdown: 0.0},
+            {fecha: "2025-08-22", hora: "23:03", symbol: "AAVE/USDT", pnl: 41.07, balance: 1250.21, acumulado: 161.85, drawdown: 0.0},
+            {fecha: "2025-08-23", hora: "02:53", symbol: "AAVE/USDT", pnl: 43.93, balance: 1294.14, acumulado: 205.78, drawdown: 0.0},
+            {fecha: "2025-08-23", hora: "16:21", symbol: "AAVE/USDT", pnl: 36.48, balance: 1330.62, acumulado: 242.26, drawdown: 0.0},
+            {fecha: "2025-08-24", hora: "04:07", symbol: "SOL/USDT", pnl: 25.20, balance: 1355.82, acumulado: 267.46, drawdown: 0.0},
+            {fecha: "2025-08-24", hora: "21:12", symbol: "ATOM/USDT", pnl: 40.70, balance: 1396.52, acumulado: 308.16, drawdown: 0.0},
+            {fecha: "2025-08-25", hora: "02:32", symbol: "COMP/USDT", pnl: -8.43, balance: 1388.09, acumulado: 299.73, drawdown: -8.43},
+            {fecha: "2025-08-25", hora: "15:02", symbol: "ETH/USDT", pnl: -0.11, balance: 1387.98, acumulado: 299.62, drawdown: -8.54},
+            {fecha: "2025-08-25", hora: "15:39", symbol: "ETH/USDT", pnl: -1.59, balance: 1386.39, acumulado: 298.03, drawdown: -10.13},
+            {fecha: "2025-08-25", hora: "17:57", symbol: "ETH/USDT", pnl: -3.18, balance: 1383.21, acumulado: 294.85, drawdown: -13.31},
+            {fecha: "2025-08-25", hora: "21:33", symbol: "COMP/USDT", pnl: -20.81, balance: 1362.40, acumulado: 274.04, drawdown: -34.12},
+            {fecha: "2025-08-25", hora: "23:31", symbol: "DOT/USDT", pnl: -10.35, balance: 1352.05, acumulado: 263.69, drawdown: -44.47},
+            {fecha: "2025-08-25", hora: "23:31", symbol: "DOT/USDT", pnl: -14.46, balance: 1337.59, acumulado: 249.23, drawdown: -58.93},
+            {fecha: "2025-08-26", hora: "14:38", symbol: "XRP/USDT", pnl: -16.56, balance: 1321.03, acumulado: 232.67, drawdown: -75.49},
+            {fecha: "2025-08-27", hora: "02:10", symbol: "XRP/USDT", pnl: 18.55, balance: 1339.58, acumulado: 251.22, drawdown: -56.94},
+            {fecha: "2025-08-27", hora: "10:39", symbol: "ATOM/USDT", pnl: -3.52, balance: 1336.06, acumulado: 247.70, drawdown: -60.46},
+            {fecha: "2025-08-27", hora: "20:58", symbol: "ATOM/USDT", pnl: 2.63, balance: 1338.69, acumulado: 250.33, drawdown: -57.83},
+            {fecha: "2025-08-27", hora: "20:58", symbol: "LINK/USDT", pnl: 7.32, balance: 1346.01, acumulado: 257.65, drawdown: -50.51},
+            {fecha: "2025-08-27", hora: "22:06", symbol: "LTC/USDT", pnl: -0.39, balance: 1345.62, acumulado: 257.26, drawdown: -50.90},
+            {fecha: "2025-08-28", hora: "00:11", symbol: "ATOM/USDT", pnl: -6.50, balance: 1339.12, acumulado: 250.76, drawdown: -57.40},
+            {fecha: "2025-08-28", hora: "21:55", symbol: "XRP/USDT", pnl: -14.58, balance: 1324.54, acumulado: 236.18, drawdown: -71.98},
+            {fecha: "2025-08-28", hora: "21:59", symbol: "DOT/USDT", pnl: -7.36, balance: 1317.18, acumulado: 228.82, drawdown: -79.34},
+            {fecha: "2025-08-29", hora: "03:16", symbol: "LINK/USDT", pnl: -4.29, balance: 1312.89, acumulado: 224.53, drawdown: -83.63},
+            {fecha: "2025-08-29", hora: "03:16", symbol: "LINK/USDT", pnl: -4.30, balance: 1308.59, acumulado: 220.23, drawdown: -87.93},
+            {fecha: "2025-08-29", hora: "03:16", symbol: "ATOM/USDT", pnl: 11.00, balance: 1319.59, acumulado: 231.23, drawdown: -76.93},
+            {fecha: "2025-08-29", hora: "03:17", symbol: "DOT/USDT", pnl: 1.07, balance: 1320.66, acumulado: 232.30, drawdown: -75.86}
+        ];
+
+        // Llenar la tabla
+        const tableBody = document.getElementById('tableBody');
+        data.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            const pnlClass = row.pnl >= 0 ? 'positive-pnl' : 'negative-pnl';
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${row.fecha}</td>
+                <td>${row.hora}</td>
+                <td><strong>${row.symbol}</strong></td>
+                <td class="${pnlClass}">${row.pnl >= 0 ? '+' : ''}${row.pnl.toFixed(2)} €</td>
+                <td>${row.balance.toFixed(2)} €</td>
+                <td>${row.acumulado.toFixed(2)} €</td>
+                <td>${row.drawdown.toFixed(2)} €</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        // Gráfica de Balance
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        new Chart(balanceCtx, {
+            type: 'line',
+            data: {
+                labels: data.map(d => `${d.fecha} ${d.hora}`),
+                datasets: [{
+                    label: 'Balance (EUR)',
+                    data: data.map(d => d.balance),
+                    borderColor: '#059669',
+                    backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#059669',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: { font: { size: 12 } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 },
+                        displayColors: false,
+                        callbacks: {
+                            title: function(context) {
+                                return `${context[0].label}`;
+                            },
+                            label: function(context) {
+                                return `Balance: ${context.parsed.y.toFixed(2)} €`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: { callback: function(value) { return value.toFixed(0) + ' €'; } }
+                    }
+                }
+            }
+        });
+
+        // Gráfica de PnL
+        const pnlCtx = document.getElementById('pnlChart').getContext('2d');
+        new Chart(pnlCtx, {
+            type: 'bar',
+            data: {
+                labels: data.map((d, i) => `Op${i+1}`),
+                datasets: [{
+                    label: 'PnL (EUR)',
+                    data: data.map(d => d.pnl),
+                    backgroundColor: data.map(d => d.pnl >= 0 ? '#10b981' : '#ef4444'),
+                    borderColor: data.map(d => d.pnl >= 0 ? '#059669' : '#dc2626'),
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                indexAxis: 'x',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        padding: 12,
+                        callbacks: {
+                            title: function(context) {
+                                return data[context[0].dataIndex].symbol;
+                            },
+                            label: function(context) {
+                                const idx = context.dataIndex;
+                                return [`PnL: ${context.parsed.y.toFixed(2)} €`, 
+                                        `Balance: ${data[idx].balance.toFixed(2)} €`,
+                                        `Hora: ${data[idx].hora}`];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { callback: function(value) { return value.toFixed(0) + ' €'; } }
+                    }
+                }
+            }
+        });
+
+        // Gráfica de Drawdown
+        const ddCtx = document.getElementById('drawdownChart').getContext('2d');
+        new Chart(ddCtx, {
+            type: 'line',
+            data: {
+                labels: data.map(d => `${d.fecha} ${d.hora}`),
+                datasets: [{
+                    label: 'Drawdown (EUR)',
+                    data: data.map(d => d.drawdown),
+                    borderColor: '#dc2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#dc2626',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                const idx = context.dataIndex;
+                                return [`Drawdown: ${context.parsed.y.toFixed(2)} €`, 
+                                        `Par: ${data[idx].symbol}`,
+                                        `Hora: ${data[idx].hora}`];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { callback: function(value) { return value.toFixed(0) + ' €'; } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
